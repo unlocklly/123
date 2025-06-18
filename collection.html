@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国国家数字图书馆</title>
+    <link href="bootstrap-4.6.2-dist\css\bootstrap.min.css" rel="stylesheet">
+    <link href="fontawesome\css\all.min.css" rel="stylesheet">
+    <style>
+
+        
+        :root {
+            --primary-blue: #1e4a72;
+            --secondary-blue: #2d5aa0;
+            --light-blue: #e8f1ff;
+            --accent-blue: #3b82f6;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #fafafa;
+        }
+
+        /* Header Styles */
+        .header-top {
+            background: var(--light-blue);
+            padding: 8px 0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .main-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo-section {
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo:hover {
+            color: var(--secondary-blue);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            margin-right: 10px;
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: white !important;
+            padding: 15px 20px !important;
+            transition: all 0.3s ease;
+            border-radius: 0;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: var(--secondary-blue);
+            color: white !important;
+        }
+
+        /* Hero Carousel */
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            height: 500px;
+        }
+        .carousel-item {
+            position: absolute;
+            width: 100%;
+            height: 500px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .carousel-item.active { opacity: 1; }
+        .carousel-bg {
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-caption {
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 2.5rem 3rem;
+            border-radius: 15px;
+            text-align: center;
+            color: #fff;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%);
+            transform: translateX(-50%);
+        }
+        .carousel-caption h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+        .carousel-caption p {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .carousel-caption .btn {
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            background-color: #ff7f50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .carousel-caption .btn:hover {
+            background-color: #ff5722;
+            transform: translateY(-4px);
+        }
+        .carousel-controls {
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .carousel-controls button {
+            background: rgba(0,0,0,0.4);
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            width: 3.5rem; height: 3.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: all;
+            transition: background 0.3s ease;
+        }
+        .carousel-controls button:hover {
+            background: rgba(217, 92, 92, 0.6);
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 35%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .carousel-indicator {
+            width: 30px;
+            height: 5px;
+            background-color: rgba(200, 182, 182, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            pointer-events: all;
+        }
+        .carousel-indicator.active {
+            width: 50px;
+            background-color: #fff;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--bg-light);
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .search-box {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .search-tab {
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .search-tab:hover,
+        .search-tab.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Service Cards */
+        .services-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            height: 100%;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--secondary-blue);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            font-size: 48px;
+            color: var(--secondary-blue);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+            color: var(--primary-blue);
+        }
+
+        .service-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .service-desc {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* News Section */
+        .news-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            height: 100%;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .news-image {
+            height: 200px;
+            background: var(--light-blue);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .news-image i {
+            font-size: 48px;
+            color: var(--secondary-blue);
+        }
+
+        .news-content {
+            padding: 25px;
+        }
+
+        .news-date {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .news-date i {
+            margin-right: 8px;
+            color: var(--secondary-blue);
+        }
+
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+
+        .news-card:hover .news-title {
+            color: var(--secondary-blue);
+        }
+
+        .news-excerpt {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Resources Section */
+        .resources-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            height: 100%;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: var(--secondary-blue);
+        }
+
+        .resource-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            color: var(--secondary-blue);
+            font-size: 24px;
+        }
+
+        .resource-content h5 {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .resource-content p {
+            color: var(--text-light);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-blue);
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .footer-link:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+
+        .footer-contact {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .footer-contact i {
+            margin-right: 10px;
+            margin-top: 5px;
+            color: var(--accent-blue);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-carousel {
+                height: 400px;
+            }
+            
+            .carousel-caption h2 {
+                font-size: 2rem;
+            }
+            
+            .carousel-caption p {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-carousel {
+                height: 350px;
+            }
+            
+            .carousel-caption {
+                padding: 20px;
+            }
+            
+            .carousel-caption h2 {
+                font-size: 1.6rem;
+            }
+            
+            .carousel-caption p {
+                font-size: 1rem;
+            }
+            
+            .search-tabs {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .service-card, .resource-card {
+                margin-bottom: 25px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 22px;
+            }
+            
+            .logo-icon {
+                font-size: 26px;
+            }
+            
+            .header-top span {
+                display: block;
+                margin-bottom: 5px;
+            }
+            
+            .header-top span.ms-4 {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+/* 馆藏专属样式 */
+.collection-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    height: 480px; /* 新增固定高度 */
+    display: flex; /* 新增弹性布局 */
+    flex-direction: column;
+}
+
+.collection-card img {
+    height: 280px; /* 固定图片高度 */
+    width: 100%;
+    object-fit: cover; /* 保持图片比例 */
+    transition: transform 0.3s ease;
+}
+
+.collection-info {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(5px);
+    flex: 1; /* 填充剩余空间 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.collection-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--primary-blue);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    z-index: 1;
+}
+
+.collection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.collection-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+        
+    </style>
+</head>
+<body>
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <div class="mb-2 mb-md-0">
+                    <span><i class="fas fa-phone me-1"></i> 服务热线：400-600-6988</span>
+                    <span class="ms-4"><i class="fas fa-envelope me-1"></i> service@nlc.cn</span>
+                </div>
+                <div>
+                    <a href="#" class="text-decoration-none me-3"><i class="fas fa-globe me-1"></i>English</a>
+
+                    <a href="login.html" class="text-decoration-none"  target="_blank"><i class="fas fa-user me-1"></i>登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-section d-flex justify-content-between align-items-center">
+                <a href="#" class="logo">
+                    <i class="fas fa-book-open logo-icon"></i>中国国家数字图书馆
+                </a>
+                <div class="header-tools">
+                    <button class="btn btn-outline-primary me-2">
+                        <i class="fas fa-search"></i> 高级搜索
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-user"></i><a href="services.html">读者服务</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav nav-pills flex-wrap">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  active" href="collection.html">馆藏资源</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">数字资源</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="services.html">读者服务</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">学术研究</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">典籍博物馆</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="preservation.html">古籍保护</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">关于本馆</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<section class="collections-section py-5">
+    <div class="container">
+        <div class="section-header fade-in">
+            <h2>典藏精品</h2>
+            <p>跨越千年的文明见证</p>
+        </div>
+
+        <!-- 分类导航 -->
+        <div class="collection-filter mb-5 fade-in">
+            <div class="d-flex flex-wrap gap-3">
+                <button class="btn btn-outline-primary active">全部</button>
+                <button class="btn btn-outline-primary">古籍善本</button>
+                <button class="btn btn-outline-primary">金石拓片</button>
+                <button class="btn btn-outline-primary">名家手稿</button>
+                <button class="btn btn-outline-primary">舆图文献</button>
+            </div>
+        </div>
+
+        <!-- 馆藏展示 -->
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4 fade-in">
+                <div class="collection-card">
+                    <div class="collection-badge">镇馆之宝</div>
+                    <img src="images/book1.webp" class="img-fluid">
+                    <div class="collection-info p-4">
+                        <h4>四库全书</h4>
+                        <div class="collection-meta">
+                            <span class="badge bg-primary">清乾隆</span>
+                            <span class="text-muted">共36304册</span>
+                        </div>
+                        <p class="mt-2">现存唯一原架原函原书保存的版本，中国古典文化集大成之作</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in">
+                <div class="collection-card">
+                    <div class="collection-badge">镇馆之宝</div>
+                    <img src="images/book4.png" class="img-fluid">
+                    <div class="collection-info p-4">
+                        <h4>永乐大典</h4>
+                        <div class="collection-meta">
+                            <span class="badge bg-primary">明代</span>
+                            <span class="text-muted">共22877卷</span>
+                        </div>
+                        <p class="mt-2">现存唯一原架原函原书保存的版本，中国古典文化集大成之作</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in">
+                <div class="collection-card">
+                    <div class="collection-badge">镇馆之宝</div>
+                    <img src="images/book3.jpg" class="img-fluid">
+                    <div class="collection-info p-4">
+                        <h4>敦煌遗书</h4>
+                        <div class="collection-meta">
+                            <span class="badge bg-primary">4至11世纪</span>
+                            <span class="text-muted">共约60000件</span>
+                        </div>
+                        <p class="mt-2">现存唯一原架原函原书保存的版本，中国古典文化集大成之作</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 fade-in">
+                <div class="collection-card">
+                    <div class="collection-badge"></div>
+                    <img src="images/book5.webp" class="img-fluid">
+                    <div class="collection-info p-4">
+                        <h4>徽州善本家谱</h4>
+                        <div class="collection-meta">
+                            <span class="badge bg-primary">明清</span>
+                            <span class="text-muted">共286部</span>
+                        </div>
+                        <p class="mt-2">现存唯一原架原函原书保存的版本，中国古典文化集大成之作</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 fade-in">
+                <div class="collection-card">
+                    <div class="collection-badge">镇馆之宝</div>
+                    <img src="images/book2.jpg" class="img-fluid">
+                    <div class="collection-info p-4">
+                        <h4>赵城金藏</h4>
+                        <div class="collection-meta">
+                            <span class="badge bg-primary">金代</span>
+                            <span class="text-muted">共7000卷</span>
+                        </div>
+                        <p class="mt-2">现存唯一原架原函原书保存的版本，中国古典文化集大成之作</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 fade-in">
+                <div class="collection-card">
+                    <div class="collection-badge">镇馆之宝</div>
+                    <img src="images/book2.jpg" class="img-fluid">
+                    <div class="collection-info p-4">
+                        <h4>赵城金藏</h4>
+                        <div class="collection-meta">
+                            <span class="badge bg-primary">金代</span>
+                            <span class="text-muted">共7000卷</span>
+                        </div>
+                        <p class="mt-2">现存唯一原架原函原书保存的版本，中国古典文化集大成之作</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加加载动画
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // 观察所有需要动画的元素
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // 初始化首页元素动画
+            setTimeout(() => {
+                document.querySelectorAll('.hero-section .fade-in').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                    }, index * 200);
+                });
+            }, 300);
+            
+            // 搜索标签切换
+            const searchTabs = document.querySelectorAll('.search-tab');
+            searchTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有active类
+                    searchTabs.forEach(t => t.classList.remove('active'));
+                    // 给当前点击的添加active类
+                    this.classList.add('active');
+                });
+            });
+            
+            // 搜索功能
+            const searchBtn = document.querySelector('.search-section .btn');
+            const searchInput = document.querySelector('.search-section input');
+            
+            function performSearch() {
+                const query = searchInput.value.trim();
+                const activeTab = document.querySelector('.search-tab.active');
+                const searchType = activeTab ? activeTab.dataset.type : 'all';
+                
+                if (query) {
+                    alert(`搜索"${query}"，类型：${searchType}`);
+                } else {
+                    alert('请输入搜索关键词');
+                }
+            }
+            
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // 卡片悬停效果增强
+            const cards = document.querySelectorAll('.service-card, .news-card, .resource-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 轮播图功能
+            const items = document.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            let current = 0;
+            
+            // 初始化指示器
+            indicators[0].classList.add('active');
+            
+            // 下一张
+            document.getElementById('next').addEventListener('click', () => {
+                items[current].classList.remove('active');
+                indicators[current].classList.remove('active');
+                current = (current+1) % items.length;
+                items[current].classList.add('active');
+                indicators[current].classList.add('active');
+            });
+            
+            // 上一张
+            document.getElementById('prev').addEventListener('click', () => {
+                items[current].classList.remove('active');
+                indicators[current].classList.remove('active');
+                current = (current-1+items.length) % items.length;
+                items[current].classList.add('active');
+                indicators[current].classList.add('active');
+            });
+            
+            // 自动轮播
+            let interval = setInterval(() => {
+                document.getElementById('next').click();
+            }, 3000);
+            
+            // 鼠标悬停时暂停自动轮播
+            const carousel = document.querySelector('.carousel');
+            carousel.addEventListener('mouseenter', () => {
+                clearInterval(interval);
+            });
+            
+            // 鼠标离开时恢复自动轮播
+            carousel.addEventListener('mouseleave', () => {
+                interval = setInterval(() => {
+                    document.getElementById('next').click();
+                }, 3000);
+            });
+            
+            // 指示器点击事件
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    items[current].classList.remove('active');
+                    indicators[current].classList.remove('active');
+                    current = index;
+                    items[current].classList.add('active');
+                    indicators[current].classList.add('active');
+                });
+            });
+            
+            // 页面加载完成提示
+            window.addEventListener('load', function() {
+                console.log('国家数字图书馆网站加载完成');
+            });
+        });
+    </script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">快速导航</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="collection.html" class="footer-link">馆藏查询</a></li>
+                        <li class="mb-2"><a href="collection.html" class="footer-link">数字资源</a></li>
+                        <li class="mb-2"><a href="services.html" class="footer-link">读者服务</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">学术研究</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">服务指南</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="footer-link">入馆须知</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">借阅规则</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">办证指南</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">馆舍布局</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">联系我们</h5>
+                    <div class="footer-contact">
+                        <i class="fas fa-map-marker-alt"></i>北京市海淀区中关村南大街33号
+                    </div>
+                    <div class="footer-contact">
+                        <i class="fas fa-phone"></i>400-600-6988
+                    </div>
+                    <div class="footer-contact">
+                        <i class="fas fa-envelope"></i>service@nlc.cn
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">关注我们</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-weixin"></i></a>
+                        <a href="#"><i class="fab fa-weibo"></i></a>
+                        <a href="#"><i class="fab fa-qq"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 中国国家图书馆版权所有 | 京ICP备05014420号 | 京公网安备11010802043898</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

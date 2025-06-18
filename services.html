@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>读者服务 - 中国国家数字图书馆</title>
+    <link href="bootstrap-4.6.2-dist\css\bootstrap.min.css" rel="stylesheet">
+    <link href="fontawesome\css\all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e4a72;
+            --secondary-blue: #2d5aa0;
+            --light-blue: #e8f1ff;
+            --accent-blue: #3b82f6;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #fafafa;
+        }
+
+        /* Header Styles */
+        .header-top {
+            background: var(--light-blue);
+            padding: 8px 0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .main-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo-section {
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo:hover {
+            color: var(--secondary-blue);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            margin-right: 10px;
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: white !important;
+            padding: 15px 20px !important;
+            transition: all 0.3s ease;
+            border-radius: 0;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: var(--secondary-blue);
+            color: white !important;
+        }
+
+        /* Hero Carousel */
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            height: 500px;
+        }
+        .carousel-item {
+            position: absolute;
+            width: 100%;
+            height: 500px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .carousel-item.active { opacity: 1; }
+        .carousel-bg {
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-caption {
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 2.5rem 3rem;
+            border-radius: 15px;
+            text-align: center;
+            color: #fff;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%);
+            transform: translateX(-50%);
+        }
+        .carousel-caption h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+        .carousel-caption p {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .carousel-caption .btn {
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            background-color: #ff7f50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .carousel-caption .btn:hover {
+            background-color: #ff5722;
+            transform: translateY(-4px);
+        }
+        .carousel-controls {
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .carousel-controls button {
+            background: rgba(0,0,0,0.4);
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            width: 3.5rem; height: 3.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: all;
+            transition: background 0.3s ease;
+        }
+        .carousel-controls button:hover {
+            background: rgba(217, 92, 92, 0.6);
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 35%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .carousel-indicator {
+            width: 30px;
+            height: 5px;
+            background-color: rgba(200, 182, 182, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            pointer-events: all;
+        }
+        .carousel-indicator.active {
+            width: 50px;
+            background-color: #fff;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--bg-light);
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .search-box {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .search-tab {
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .search-tab:hover,
+        .search-tab.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Service Cards */
+        .services-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            height: 100%;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--secondary-blue);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            font-size: 48px;
+            color: var(--secondary-blue);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+            color: var(--primary-blue);
+        }
+
+        .service-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .service-desc {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* News Section */
+        .news-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            height: 100%;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .news-image {
+            height: 200px;
+            background: var(--light-blue);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .news-image i {
+            font-size: 48px;
+            color: var(--secondary-blue);
+        }
+
+        .news-content {
+            padding: 25px;
+        }
+
+        .news-date {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .news-date i {
+            margin-right: 8px;
+            color: var(--secondary-blue);
+        }
+
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+
+        .news-card:hover .news-title {
+            color: var(--secondary-blue);
+        }
+
+        .news-excerpt {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Resources Section */
+        .resources-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            height: 100%;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: var(--secondary-blue);
+        }
+
+        .resource-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            color: var(--secondary-blue);
+            font-size: 24px;
+        }
+
+        .resource-content h5 {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .resource-content p {
+            color: var(--text-light);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-blue);
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .footer-link:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+
+        .footer-contact {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .footer-contact i {
+            margin-right: 10px;
+            margin-top: 5px;
+            color: var(--accent-blue);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-carousel {
+                height: 400px;
+            }
+            
+            .carousel-caption h2 {
+                font-size: 2rem;
+            }
+            
+            .carousel-caption p {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-carousel {
+                height: 350px;
+            }
+            
+            .carousel-caption {
+                padding: 20px;
+            }
+            
+            .carousel-caption h2 {
+                font-size: 1.6rem;
+            }
+            
+            .carousel-caption p {
+                font-size: 1rem;
+            }
+            
+            .search-tabs {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .service-card, .resource-card {
+                margin-bottom: 25px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 22px;
+            }
+            
+            .logo-icon {
+                font-size: 26px;
+            }
+            
+            .header-top span {
+                display: block;
+                margin-bottom: 5px;
+            }
+            
+            .header-top span.ms-4 {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+                .service-steps {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--secondary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* 手风琴样式 */
+        .accordion-item {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .accordion-header {
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 1rem;
+        }
+
+        .service-rule {
+            margin-bottom: 1rem;
+        }
+
+        .service-rule h5 {
+            color: var(--primary-blue);
+        }
+
+        .service-desc ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+
+        .service-card {
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .service-icon i {
+            font-size: 24px;
+            color: white;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <div class="mb-2 mb-md-0">
+                    <span><i class="fas fa-phone me-1"></i> 服务热线：400-600-6988</span>
+                    <span class="ms-4"><i class="fas fa-envelope me-1"></i> service@nlc.cn</span>
+                </div>
+                <div>
+                    <a href="#" class="text-decoration-none me-3"><i class="fas fa-globe me-1"></i>English</a>
+
+                    <a href="login.html" class="text-decoration-none"  target="_blank"><i class="fas fa-user me-1"></i>登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-section d-flex justify-content-between align-items-center">
+                <a href="#" class="logo">
+                    <i class="fas fa-book-open logo-icon"></i>中国国家数字图书馆
+                </a>
+                <div class="header-tools">
+                    <button class="btn btn-outline-primary me-2">
+                        <i class="fas fa-search"></i> 高级搜索
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-user"></i><a>读者服务</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav nav-pills flex-wrap">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">馆藏资源</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">数字资源</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  active" href="services.html">读者服务</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">学术研究</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">典籍博物馆</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="preservation.html">古籍保护</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">关于本馆</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main>
+        <!-- 服务指南部分 -->
+        <section class="services-section">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>读者服务指南</h2>
+                    <p>为您提供全方位的文献信息服务支持</p>
+                </div>
+
+                <!-- 服务卡片布局 -->
+                <div class="row g-4">
+                    <!-- 办证服务卡片 -->
+                    <div class="col-lg-6 fade-in">
+                        <div class="service-card h-100">
+                            <div class="service-icon bg-success">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <h3 class="service-title">办证服务</h3>
+                            <div class="service-steps">
+                                <div class="step">
+                                    <span class="step-number">1</span>
+                                    <div>
+                                        <h5>在线预约</h5>
+                                        <p>访问本馆官方网站或手机 APP，点击「办证预约」按钮，填写个人信息（姓名、身份证号、联系方式等），选择预约办证时间。</p>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">2</span>
+                                    <div>
+                                        <h5>现场办理</h5>
+                                        <p>请您在预约时间携带有效身份证件原件（如身份证、护照、户口本等）到本馆服务台，工作人员将核验您的身份信息。</p>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">3</span>
+                                    <div>
+                                        <h5>缴纳押金（可选）</h5>
+                                        <p>如需开通外借功能，您可以选择缴纳相应的押金（普通读者证 100 元，研究型读者证 200 元），押金可在退证时全额退还。</p>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">4</span>
+                                    <div>
+                                        <h5>领取读者证</h5>
+                                        <p>身份核验通过并完成押金缴纳（如需）后，工作人员将为您发放读者证，同时告知您初始密码及使用注意事项。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 借阅服务卡片 -->
+                    <div class="col-lg-6 fade-in">
+                        <div class="service-card h-100">
+                            <div class="service-icon bg-primary">
+                                <i class="fas fa-book-reader"></i>
+                            </div>
+                            <h3 class="service-title">借阅服务</h3>
+                            <div class="service-steps">
+                                <div class="step">
+                                    <span class="step-number">1</span>
+                                    <div>
+                                        <h5>外借规则</h5>
+                                        <p><strong>普通读者证</strong>：可外借 10 册图书，借期 30 天，可续借 1 次，续借期限为 30 天。<br>
+                                        <strong>研究型读者证</strong>：可外借 20 册图书，借期 60 天，可续借 2 次，每次续借期限为 30 天。</p>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">2</span>
+                                    <div>
+                                        <h5>逾期处理</h5>
+                                        <p>逾期费用为 0.1 元/册/天。<br>
+                                        累计逾期超过 30 天，将暂停借阅权限，需结清逾期费用后方可恢复。</p>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">3</span>
+                                    <div>
+                                        <h5>归还方式</h5>
+                                        <p><strong>现场归还</strong>：将图书归还至本馆服务台，工作人员将进行核验。<br>
+                                        <strong>自助归还</strong>：使用本馆自助还书设备进行归还，设备 24 小时开放。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 搜索部分 -->
+        <section class="search-section">
+            <div class="container">
+                <div class="search-box fade-in">
+                    <h3 class="mb-3">服务查询</h3>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="输入读者证号、图书名称或问题关键词">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i> 查询
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>常见问题解答</h2>
+                    <p>快速解决您在使用服务中遇到的问题</p>
+                </div>
+                
+                <!-- 手风琴内容 -->
+                <div class="accordion fade-in">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <i class="fas fa-question-circle me-2"></i> 如何挂失读者证？
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>您可以通过以下三种方式挂失读者证：</p>
+                            <ol>
+                                <li><strong>在线挂失</strong>：登录本馆官方网站或手机 APP，在「我的账户」中找到「挂失读者证」功能，按照提示操作即可。</li>
+                                <li><strong>电话挂失</strong>：拨打服务热线 400 - 600 - 6988，按照语音提示选择挂失服务，提供您的读者证号和身份信息进行挂失。</li>
+                                <li><strong>现场挂失</strong>：携带有效身份证件到本馆服务台，向工作人员说明情况，办理挂失手续。</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <i class="fas fa-question-circle me-2"></i> 如何续借图书？
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>您可以通过以下三种方式续借图书：</p>
+                            <ol>
+                                <li><strong>在线续借</strong>：登录本馆官方网站或手机 APP，在「我的借阅」中找到需要续借的图书，点击「续借」按钮即可。</li>
+                                <li><strong>电话续借</strong>：拨打服务热线 400 - 600 - 6988，按照语音提示选择续借服务，提供您的读者证号和图书信息进行续借。</li>
+                                <li><strong>现场续借</strong>：携带需要续借的图书到本馆服务台，向工作人员说明情况，办理续借手续。</li>
+                            </ol>
+                            <p class="text-muted">注意：逾期图书不可续借，每本图书的续借次数有限，请在借期内及时续借。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 完整页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">快速导航</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="collection.html" class="footer-link">馆藏查询</a></li>
+                        <li class="mb-2"><a href="collection.html" class="footer-link">数字资源</a></li>
+                        <li class="mb-2"><a href="services.html" class="footer-link">读者服务</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">学术研究</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 其他页脚栏目 -->
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 中国国家图书馆版权所有 | 京ICP备05014420号 | 京公网安备11010802043898</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 完整JavaScript -->
+    <script>
+        // 继承index3.html的所有交互功能
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+            // 手风琴交互
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.fas.fa-chevron-down');
+                    content.style.maxHeight = content.style.maxHeight ? null : `${content.scrollHeight}px`;
+                    icon.classList.toggle('fa-rotate-180');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
